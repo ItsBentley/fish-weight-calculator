@@ -9,12 +9,13 @@
 /* ---------- 1. Theme colours ----------
    All colours are variables so light/dark mode only changes them here. */
 :root {
-  --bg: #e4ebe7;      /* page background */
-  --card: #f5f8f6;    /* panel background */
-  --ink: #14302a;     /* main text */
-  --mute: #5b7068;    /* secondary text */
-  --line: #c3d0c9;    /* borders */
-  --accent: #1f6f5c;  /* buttons and result box */
+  --bg: #edf3f6;      /* page background */
+  --card: #fff;       /* panel background */
+  --ink: #203746;     /* main text */
+  --mute: #536b79;    /* secondary text */
+  --line: #c9d8e0;    /* borders */
+  --accent: #006a9f;  /* buttons and result box */
+  --highlight: #a4c958; /* Preston Innovations lime accent */
   --on: #fff;         /* text on top of the accent colour */
   --warn: #a23b2a;    /* errors and delete */
   color-scheme: light;
@@ -28,16 +29,18 @@
 /* Dark mode: follows the phone's setting */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f1c19; --card: #182925; --ink: #e3efe9; --mute: #94aba2;
-    --line: #2b423b; --accent: #5fc3a5; --on: #0f1c19; --warn: #f08a74;
+    --bg: #111c23; --card: #1b2a34; --ink: #e6eef2; --mute: #a8bac4;
+    --line: #354b58; --accent: #39a5d8; --highlight: #a4c958;
+    --on: #10212b; --warn: #f08a74;
     color-scheme: dark;
   }
 }
 
 /* Dark mode forced by setting data-theme="dark" on <html> */
 :root[data-theme="dark"] {
-  --bg: #0f1c19; --card: #182925; --ink: #e3efe9; --mute: #94aba2;
-  --line: #2b423b; --accent: #5fc3a5; --on: #0f1c19; --warn: #f08a74;
+  --bg: #111c23; --card: #1b2a34; --ink: #e6eef2; --mute: #a8bac4;
+  --line: #354b58; --accent: #39a5d8; --highlight: #a4c958;
+  --on: #10212b; --warn: #f08a74;
   color-scheme: dark;
 }
 
@@ -57,7 +60,16 @@ body {
 }
 
 main { width: 100%; max-width: 440px; }   /* narrow column, phone-sized */
-h1 { font-size: 1.5rem; font-weight: 800; margin: 4px 0 16px; }
+h1 { font-size: 1.5rem; font-weight: 800; margin: 4px 0 16px; text-align: center; }
+h1::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 4px;
+  margin: 8px auto 0;
+  background: var(--highlight);
+  border-radius: 999px;
+}
 
 
 /* ---------- 3. Unit switch (lb & oz / kg) ---------- */
