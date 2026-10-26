@@ -12,10 +12,6 @@ const state = {
   custom: { lb: '', oz: '', kg: '' }   // what was typed in the custom sling boxes
 };
 
-/* Last time Save sling ran (stops a single tap saving twice) */
-let lastSaveTime = 0;
-
-
 /* ---------- 2. Calculations ---------- */
 
 /* Scale reading (fish + sling) in pounds */
@@ -117,16 +113,8 @@ function addSling() {
   showMessage('Saved ' + name + '.', false);
   refresh();
 
-  // Close the phone keyboard
-  try { if (document.activeElement) document.activeElement.blur(); } catch (e) {}
-}
-
-/* Runs addSling, ignoring a second trigger within 0.7s (a tap can fire two events) */
-function trySaveSling() {
-  const now = Date.now();
-  if (now - lastSaveTime < 700) return;
-  lastSaveTime = now;
-  addSling();
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLElement) activeElement.blur();
 }
 
 /* Empties the scale reading boxes, ready for the next fish */
@@ -146,10 +134,10 @@ function onCustomSlingInput() {
 
 /* ---------- 5. Button wiring ---------- */
 function wireEvents() {
-  $('u-lb').onclick = () => setUnit('lb');
-  $('u-kg').onclick = () => setUnit('kg');
-  $('manage').onclick = toggleManager;
-  $('clear').onclick = clearReading;
+  $('u-lb').addEventListener('click', () => setUnit('lb'));
+  $('u-kg').addEventListener('click', () => setUnit('kg'));
+  $('manage').addEventListener('click', toggleManager);
+  $('clear').addEventListener('click', clearReading);
 
   // Recalculate whenever the scale reading changes
   ['glb', 'goz', 'gkg'].forEach((id) => $(id).addEventListener('input', updateResult));
@@ -157,11 +145,7 @@ function wireEvents() {
   // Remember and recalculate whenever the custom sling boxes change
   ['slb', 'soz', 'skg'].forEach((id) => $(id).addEventListener('input', onCustomSlingInput));
 
-  // Save sling button. pointerdown stops the iPhone keyboard closing first
-  // (which can make the tap miss); pointerup and click both save, guarded against doubles.
-  $('save').addEventListener('pointerdown', (e) => e.preventDefault());
-  $('save').addEventListener('pointerup', trySaveSling);
-  $('save').addEventListener('click', trySaveSling);
+  $('save').addEventListener('click', addSling);
 }
 
 

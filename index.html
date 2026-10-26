@@ -21,12 +21,13 @@
     alt="Digital fishing scale resting on a weigh sling"
     width="1152"
     height="768"
+    decoding="async"
   >
 
   <!-- ===== Unit switch: pounds & ounces or kilograms ===== -->
   <div class="seg" role="group" aria-label="Units">
-    <button id="u-lb" aria-pressed="true">lb &amp; oz</button>
-    <button id="u-kg" aria-pressed="false">kg</button>
+    <button id="u-lb" type="button" aria-pressed="true">lb &amp; oz</button>
+    <button id="u-kg" type="button" aria-pressed="false">kg</button>
   </div>
 
   <!-- ===== Step 1: reading from the scale (fish + sling together) ===== -->
@@ -63,7 +64,7 @@
     <!-- Weight of the chosen saved sling: shown when a saved sling is selected -->
     <p class="picked" id="picked" hidden></p>
 
-    <button class="link" id="manage" aria-expanded="false">Edit saved slings</button>
+    <button class="link" id="manage" type="button" aria-expanded="false">Edit saved slings</button>
 
     <!-- Sling manager: list of saved slings and the "add a sling" form -->
     <div id="mgr" hidden>
@@ -78,7 +79,7 @@
         <div class="row kg spaced" hidden>
           <label>kg<input id="akg" type="number" inputmode="decimal" min="0" step="any" placeholder="0.000"></label>
         </div>
-        <button class="btn" id="save">Save sling</button>
+        <button class="btn" id="save" type="button">Save sling</button>
         <p class="hint" id="msg" role="status"></p>
       </div>
     </div>
@@ -91,7 +92,7 @@
     <div class="alt" id="alt">Enter the scale reading to see the result.</div>
   </div>
 
-  <button class="clear" id="clear">Clear scale reading</button>
+  <button class="clear" id="clear" type="button">Clear scale reading</button>
 </main>
 
 <!-- Scripts load in this order: each one uses the ones above it -->

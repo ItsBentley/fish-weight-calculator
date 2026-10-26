@@ -9,8 +9,8 @@ const $ = (id) => document.getElementById(id);
 
 /* Reads a number box. Empty, negative or invalid input counts as 0 */
 function readNumber(id) {
-  const v = parseFloat($(id).value);
-  return isFinite(v) && v > 0 ? v : 0;
+  const value = $(id).valueAsNumber;
+  return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
 /* True if the box has anything typed in it */
@@ -34,9 +34,10 @@ function renderChips(state, onSelect) {
   function addChip(id, label) {
     const b = document.createElement('button');
     b.className = 'chip';
+    b.type = 'button';
     b.textContent = label;
     b.setAttribute('aria-pressed', state.sel === id);
-    b.onclick = () => onSelect(id);
+    b.addEventListener('click', () => onSelect(id));
     box.appendChild(b);
   }
 
@@ -76,9 +77,10 @@ function renderSlingList(state, onDelete) {
 
     const del = document.createElement('button');
     del.className = 'del';
+    del.type = 'button';
     del.textContent = 'Delete';
     del.setAttribute('aria-label', 'Delete ' + s.name);
-    del.onclick = () => onDelete(s.id);
+    del.addEventListener('click', () => onDelete(s.id));
 
     row.appendChild(name);
     row.appendChild(weight);
@@ -87,7 +89,7 @@ function renderSlingList(state, onDelete) {
   });
 }
 
-/* Puts the answer in the green result box */
+/* Puts the answer in the result panel */
 function showResult(mainText, altText) {
   $('out').textContent = mainText;
   $('alt').textContent = altText;

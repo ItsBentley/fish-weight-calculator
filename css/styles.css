@@ -13,7 +13,7 @@
   --ink: #f1f4f6;     /* main text */
   --mute: #b0bdc6;    /* secondary text */
   --line: #3b4852;    /* borders */
-  --accent: #006a9f;  /* buttons and result box */
+  --accent: #006a9f;  /* buttons and result panel */
   --on: #fff;         /* text on top of the accent colour */
   --warn: #f08a74;    /* errors and delete */
   color-scheme: dark;

@@ -6,12 +6,21 @@
 
 const STORAGE_KEY = 'fishweights';   // where the app's data is kept
 const OLD_STORAGE_KEY = 'sling';     // key used by the very first version (still read once)
+let storageWarningShown = false;
+
+function warnStorage(message, error) {
+  if (storageWarningShown) return;
+  storageWarningShown = true;
+  console.warn(message, error);
+}
 
 /* Saves the whole app state */
 function saveState(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (e) { /* storage unavailable: the app still works, just won't remember */ }
+  } catch (error) {
+    warnStorage('Unable to save calculator settings in this browser.', error);
+  }
 }
 
 /* Loads saved data into the given state object (changes it in place) */
@@ -32,5 +41,7 @@ function loadState(state) {
       state.unit = old.unit === 'kg' ? 'kg' : 'lb';
       state.custom = { lb: old.slb || '', oz: old.soz || '', kg: old.skg || '' };
     }
-  } catch (e) { /* unreadable data: start fresh */ }
+  } catch (error) {
+    warnStorage('Unable to load saved calculator settings; starting with defaults.', error);
+  }
 }
