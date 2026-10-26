@@ -50,6 +50,17 @@ h1::after {
   border-radius: 999px;
 }
 
+.scale-photo {
+  display: block;
+  width: min(100%, 320px);
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  margin: 0 auto 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
 
 /* ---------- 3. Unit switch (lb & oz / kg) ---------- */
 .seg {
