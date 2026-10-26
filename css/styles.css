@@ -6,44 +6,23 @@
    ========================================================== */
 
 
-/* ---------- 1. Theme colours ----------
-   All colours are variables so light/dark mode only changes them here. */
+/* ---------- 1. Theme colours ---------- */
 :root {
-  --bg: #edf3f6;      /* page background */
-  --card: #fff;       /* panel background */
-  --ink: #203746;     /* main text */
-  --mute: #536b79;    /* secondary text */
-  --line: #c9d8e0;    /* borders */
+  --bg: #171c21;      /* page, input, and chip background */
+  --card: #232a31;    /* panel background */
+  --ink: #f1f4f6;     /* main text */
+  --mute: #b0bdc6;    /* secondary text */
+  --line: #3b4852;    /* borders */
   --accent: #006a9f;  /* buttons and result box */
-  --highlight: #a4c958; /* Preston Innovations lime accent */
   --on: #fff;         /* text on top of the accent colour */
-  --warn: #a23b2a;    /* errors and delete */
-  color-scheme: light;
+  --warn: #f08a74;    /* errors and delete */
+  color-scheme: dark;
 
   /* Keep content clear of the iPhone notch and home bar */
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-
-/* Dark mode: follows the phone's setting */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #111c23; --card: #1b2a34; --ink: #e6eef2; --mute: #a8bac4;
-    --line: #354b58; --accent: #39a5d8; --highlight: #a4c958;
-    --on: #10212b; --warn: #f08a74;
-    color-scheme: dark;
-  }
-}
-
-/* Dark mode forced by setting data-theme="dark" on <html> */
-:root[data-theme="dark"] {
-  --bg: #111c23; --card: #1b2a34; --ink: #e6eef2; --mute: #a8bac4;
-  --line: #354b58; --accent: #39a5d8; --highlight: #a4c958;
-  --on: #10212b; --warn: #f08a74;
-  color-scheme: dark;
-}
-
 
 /* ---------- 2. Page layout ---------- */
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -67,7 +46,7 @@ h1::after {
   width: 44px;
   height: 4px;
   margin: 8px auto 0;
-  background: var(--highlight);
+  background: var(--accent);
   border-radius: 999px;
 }
 
