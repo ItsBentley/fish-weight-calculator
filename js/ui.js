@@ -1,24 +1,23 @@
 /* ==========================================================
-   ui.js - everything that draws on or reads from the screen
-   These functions do not make decisions; app.js tells them
-   what to show and what to do when buttons are pressed.
+   Screen helpers: read form values and render state supplied
+   by app.js. Application decisions and calculations live there.
    ========================================================== */
 
-/* Short helper: find an element by its id */
+/* Shorthand for looking up an element by its unique HTML id. */
 const $ = (id) => document.getElementById(id);
 
-/* Reads a number box. Empty, negative or invalid input counts as 0 */
+/* Read a positive number input; empty, invalid, or non-positive values count as 0. */
 function readNumber(id) {
   const value = $(id).valueAsNumber;
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-/* True if the box has anything typed in it */
+/* Check whether a number field has been entered, including an explicit zero. */
 function hasValue(id) {
   return $(id).value.trim() !== '';
 }
 
-/* Updates the unit switch and shows the lb/oz or kg boxes to match */
+/* Update the selected unit buttons and show only matching input fields. */
 function renderUnits(state) {
   $('u-lb').setAttribute('aria-pressed', state.unit === 'lb');
   $('u-kg').setAttribute('aria-pressed', state.unit === 'kg');
@@ -26,7 +25,7 @@ function renderUnits(state) {
   document.querySelectorAll('.kg').forEach((el) => { el.hidden = state.unit !== 'kg'; });
 }
 
-/* Draws the row of sling buttons: "Custom" plus each saved sling */
+/* Render the Custom option and one button for each saved sling. */
 function renderChips(state, onSelect) {
   const box = $('chips');
   box.innerHTML = '';
@@ -45,7 +44,7 @@ function renderChips(state, onSelect) {
   state.slings.forEach((s) => addChip(s.id, s.name));
 }
 
-/* Shows either the custom entry boxes or the chosen sling's weight */
+/* Show custom fields or the selected saved sling's formatted weight. */
 function renderSlingPanel(state, slingLb) {
   const isCustom = state.sel === 'custom';
   $('custom').hidden = !isCustom;
@@ -53,7 +52,7 @@ function renderSlingPanel(state, slingLb) {
   if (!isCustom) $('picked').textContent = formatWeight(slingLb, state.unit);
 }
 
-/* Draws the saved-slings list inside "Edit saved slings" */
+/* Render saved sling names, weights, and accessible delete buttons. */
 function renderSlingList(state, onDelete) {
   const list = $('list');
   list.innerHTML = '';
@@ -89,20 +88,20 @@ function renderSlingList(state, onDelete) {
   });
 }
 
-/* Puts the answer in the result panel */
+/* Update the main answer and its alternate-unit text. */
 function showResult(mainText, altText) {
   $('out').textContent = mainText;
   $('alt').textContent = altText;
 }
 
-/* Shows a message under the Save sling button (isError makes it red) */
+/* Show form feedback, styling validation errors distinctly. */
 function showMessage(text, isError) {
   const msg = $('msg');
   msg.className = isError ? 'hint err' : 'hint';
   msg.textContent = text;
 }
 
-/* Opens or closes the "Edit saved slings" area */
+/* Toggle the sling manager and keep its button label and ARIA state in sync. */
 function toggleManager() {
   const mgr = $('mgr');
   mgr.hidden = !mgr.hidden;

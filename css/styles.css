@@ -1,31 +1,26 @@
-/* ==========================================================
-   Fish Weight Calculator - styles
-   Sections: 1 Theme colours  2 Page layout  3 Unit switch
-             4 Panels & inputs  5 Sling buttons & manager
-             6 Result & buttons  7 Helpers
-   ========================================================== */
-
-
-/* ---------- 1. Theme colours ---------- */
+/* Theme tokens keep the single dark color scheme consistent. */
 :root {
-  --bg: #171c21;      /* page, input, and chip background */
-  --card: #232a31;    /* panel background */
-  --ink: #f1f4f6;     /* main text */
-  --mute: #b0bdc6;    /* secondary text */
-  --line: #3b4852;    /* borders */
-  --accent: #006a9f;  /* buttons and result panel */
-  --on: #fff;         /* text on top of the accent colour */
-  --warn: #f08a74;    /* errors and delete */
+  --bg: #171c21;
+  --card: #232a31;
+  --ink: #f1f4f6;
+  --mute: #b0bdc6;
+  --line: #3b4852;
+  --accent: #006a9f;
+  --on: #fff;
+  --warn: #f08a74;
   color-scheme: dark;
 
-  /* Keep content clear of the iPhone notch and home bar */
+  /* Safe-area spacing protects content on notched phones. */
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ---------- 2. Page layout ---------- */
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+/* ---------- Page layout and heading ---------- */
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
 * { box-sizing: border-box; }
 
 body {
@@ -38,8 +33,18 @@ body {
   padding: 20px 16px 32px;
 }
 
-main { width: 100%; max-width: 440px; }   /* narrow column, phone-sized */
-h1 { font-size: 1.5rem; font-weight: 800; margin: 4px 0 16px; text-align: center; }
+main {
+  width: 100%;
+  max-width: 440px;
+}
+
+h1 {
+  margin: 4px 0 16px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+}
+
 h1::after {
   content: "";
   display: block;
@@ -50,6 +55,7 @@ h1::after {
   border-radius: 999px;
 }
 
+/* The photo fills the content width and crops rather than distorts. */
 .scale-photo {
   display: block;
   width: 100%;
@@ -61,8 +67,7 @@ h1::after {
   border-radius: 14px;
 }
 
-
-/* ---------- 3. Unit switch (lb & oz / kg) ---------- */
+/* ---------- Unit selection ---------- */
 .seg {
   display: flex;
   background: var(--card);
@@ -71,6 +76,7 @@ h1::after {
   padding: 4px;
   margin-bottom: 16px;
 }
+
 .seg button {
   flex: 1;
   border: 0;
@@ -82,10 +88,13 @@ h1::after {
   border-radius: 9px;
   cursor: pointer;
 }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on); }  /* selected unit */
 
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on);
+}
 
-/* ---------- 4. Panels & inputs ---------- */
+/* ---------- Input panels and fields ---------- */
 .panel {
   background: var(--card);
   border: 1px solid var(--line);
@@ -93,11 +102,27 @@ h1::after {
   padding: 16px;
   margin-bottom: 12px;
 }
-.panel h2 { font-size: 1rem; margin: 0 0 10px; font-weight: 600; }
 
-.row { display: flex; gap: 10px; }          /* lb and oz boxes side by side */
-.row.spaced { margin-top: 10px; }
-label { flex: 1; font-size: 0.85rem; color: var(--mute); }
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.row.spaced {
+  margin-top: 10px;
+}
+
+label {
+  flex: 1;
+  color: var(--mute);
+  font-size: 0.85rem;
+}
 
 input {
   display: block;
@@ -112,16 +137,27 @@ input {
   border-radius: 10px;
   padding: 10px 12px;
 }
-input.name { font-size: 1.1rem; }           /* sling name box is a bit smaller */
 
-/* Clear outline for keyboard users */
-input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+input.name {
+  font-size: 1.1rem;
+}
 
+/* Keep keyboard focus clearly visible for keyboard users. */
+input:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
 
-/* ---------- 5. Sling buttons & manager ---------- */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+/* ---------- Sling selection and saved-sling manager ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
-.chip {                                      /* one button per sling */
+.chip {
   border: 1px solid var(--line);
   background: var(--bg);
   color: var(--ink);
@@ -131,11 +167,20 @@ input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); ou
   border-radius: 999px;
   cursor: pointer;
 }
-.chip[aria-pressed="true"] { background: var(--accent); color: var(--on); border-color: var(--accent); }  /* chosen sling */
 
-.picked { margin: 0; font-size: 1.1rem; font-weight: 600; }   /* weight of the chosen sling */
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on);
+  border-color: var(--accent);
+}
 
-.link {                                      /* "Edit saved slings" text button */
+.picked {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.link {
   border: 0;
   background: none;
   color: var(--accent);
@@ -145,15 +190,23 @@ input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); ou
   cursor: pointer;
 }
 
-.item {                                      /* one row in the saved slings list */
+.item {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 0;
   border-top: 1px solid var(--line);
 }
-.item span { flex: 1; font-weight: 600; }
-.item em { font-style: normal; color: var(--mute); }
+
+.item span {
+  flex: 1;
+  font-weight: 600;
+}
+
+.item em {
+  color: var(--mute);
+  font-style: normal;
+}
 
 .del {
   border: 1px solid var(--line);
@@ -166,11 +219,15 @@ input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); ou
   cursor: pointer;
 }
 
-.add { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }  /* "add a sling" form */
+/* Visually separates the new-sling form from saved sling rows. */
+.add {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
 
-
-/* ---------- 6. Result & buttons ---------- */
-.btn {                                       /* main action button (Save sling) */
+/* ---------- Result and actions ---------- */
+.btn {
   margin-top: 12px;
   width: 100%;
   border: 0;
@@ -183,10 +240,31 @@ input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); ou
   cursor: pointer;
 }
 
-.result { background: var(--accent); color: var(--on); border-radius: 16px; padding: 22px 18px; margin-top: 16px; }
-.result small { display: block; font-size: 0.9rem; opacity: 0.85; }
-.big { font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin: 6px 0; }   /* the answer */
-.alt { font-size: 1rem; opacity: 0.9; }                                           /* answer in other units */
+.result {
+  margin-top: 16px;
+  padding: 22px 18px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--on);
+}
+
+.result small {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.big {
+  margin: 6px 0;
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.alt {
+  font-size: 1rem;
+  opacity: 0.9;
+}
 
 .clear {
   margin-top: 12px;
@@ -201,9 +279,19 @@ input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); ou
   cursor: pointer;
 }
 
+/* Status text is muted normally and highlighted when it reports an error. */
+.hint {
+  margin: 10px 2px 0;
+  color: var(--mute);
+  font-size: 0.85rem;
+}
 
-/* ---------- 7. Helpers ---------- */
-.hint { font-size: 0.85rem; color: var(--mute); margin: 10px 2px 0; }   /* small help text */
-.hint.err { color: var(--warn); font-weight: 600; }                     /* error message */
+.hint.err {
+  color: var(--warn);
+  font-weight: 600;
+}
 
-[hidden] { display: none !important; }   /* makes the "hidden" attribute always win */
+/* Ensure the HTML hidden attribute cannot be overridden by component styles. */
+[hidden] {
+  display: none !important;
+}

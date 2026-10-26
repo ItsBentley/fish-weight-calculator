@@ -1,27 +1,24 @@
 /* ==========================================================
-   app.js - the app's logic and button wiring
-   Sections: 1 State  2 Calculations  3 Redraw  4 Actions
-             5 Button wiring  6 Start-up
+   Application state, weight calculations, user actions, and
+   event wiring. UI rendering helpers live in ui.js.
    ========================================================== */
 
-/* ---------- 1. State: everything the app remembers ---------- */
+/* The app keeps weights in pounds; custom fields retain the user's entries. */
 const state = {
-  unit: 'lb',                          // 'lb' (lb & oz) or 'kg'
-  sel: 'custom',                       // 'custom' or the id of the chosen saved sling
-  slings: [],                          // saved slings: { id, name, lb }  (weight kept in pounds)
-  custom: { lb: '', oz: '', kg: '' }   // what was typed in the custom sling boxes
+  unit: 'lb', // Selected input and display units.
+  sel: 'custom', // "custom" or the id of the selected saved sling.
+  slings: [], // Saved sling records: { id, name, lb }.
+  custom: { lb: '', oz: '', kg: '' } // Raw custom-field values, kept for restoration.
 };
 
-/* ---------- 2. Calculations ---------- */
-
-/* Scale reading (fish + sling) in pounds */
+/* Read the combined fish-and-sling scale reading as pounds. */
 function getScaleLb() {
   return state.unit === 'kg'
     ? kgToLb(readNumber('gkg'))
     : readNumber('glb') + readNumber('goz') / 16;
 }
 
-/* Weight of the sling currently chosen, in pounds */
+/* Read the selected saved or custom sling weight as pounds. */
 function getSlingLb() {
   if (state.sel === 'custom') {
     return state.unit === 'kg'
@@ -32,7 +29,7 @@ function getSlingLb() {
   return found ? found.lb : 0;
 }
 
-/* Works out fish weight = scale reading - sling, and shows it */
+/* Subtract the sling from the scale reading and update the result. */
 function updateResult() {
   const hasReading = state.unit === 'lb'
     ? (hasValue('glb') || hasValue('goz'))
@@ -45,11 +42,11 @@ function updateResult() {
 
   let fishLb = getScaleLb() - getSlingLb();
 
-  if (fishLb < -1e-9) {   // sling heavier than the reading: probably a typo
+  if (fishLb < -1e-9) {
     showResult('Check numbers', 'The sling weighs more than the scale reading.');
     return;
   }
-  if (fishLb < 0) fishLb = 0;   // ignore tiny rounding error
+  if (fishLb < 0) fishLb = 0; // Ignore tiny floating-point rounding errors.
 
   if (state.unit === 'lb') {
     const decimalLb = Math.round(fishLb * 100) / 100;
@@ -61,7 +58,7 @@ function updateResult() {
 }
 
 
-/* ---------- 3. Redraw the screen from the current state ---------- */
+/* ---------- Render and persist state ---------- */
 function render() {
   renderUnits(state);
   renderChips(state, selectSling);
@@ -69,7 +66,7 @@ function render() {
   renderSlingList(state, deleteSling);
 }
 
-/* Save, redraw and recalculate: used after anything changes */
+/* Persist settings, redraw dependent UI, and recalculate the fish weight. */
 function refresh() {
   saveState(state);
   render();
@@ -77,7 +74,7 @@ function refresh() {
 }
 
 
-/* ---------- 4. Actions ---------- */
+/* ---------- User actions ---------- */
 
 function setUnit(unit) {
   state.unit = unit;
@@ -91,7 +88,7 @@ function selectSling(id) {
 
 function deleteSling(id) {
   state.slings = state.slings.filter((s) => s.id !== id);
-  if (state.sel === id) state.sel = 'custom';   // fall back if the chosen sling was deleted
+  if (state.sel === id) state.sel = 'custom';
   refresh();
 }
 
@@ -107,7 +104,7 @@ function addSling() {
 
   const id = 's' + Date.now();
   state.slings.push({ id, name, lb });
-  state.sel = id;   // use the new sling straight away
+  state.sel = id;
 
   ['aname', 'alb', 'aoz', 'akg'].forEach((field) => { $(field).value = ''; });
   showMessage('Saved ' + name + '.', false);
@@ -117,14 +114,14 @@ function addSling() {
   if (activeElement instanceof HTMLElement) activeElement.blur();
 }
 
-/* Empties the scale reading boxes, ready for the next fish */
+/* Clear only the scale reading, then focus the active unit's first field. */
 function clearReading() {
   ['glb', 'goz', 'gkg'].forEach((id) => { $(id).value = ''; });
   updateResult();
   (state.unit === 'lb' ? $('glb') : $('gkg')).focus();
 }
 
-/* Remembers what was typed in the custom sling boxes */
+/* Keep custom entries in saved settings even when another sling is selected. */
 function onCustomSlingInput() {
   state.custom = { lb: $('slb').value, oz: $('soz').value, kg: $('skg').value };
   saveState(state);
@@ -132,26 +129,26 @@ function onCustomSlingInput() {
 }
 
 
-/* ---------- 5. Button wiring ---------- */
+/* ---------- Event wiring ---------- */
 function wireEvents() {
   $('u-lb').addEventListener('click', () => setUnit('lb'));
   $('u-kg').addEventListener('click', () => setUnit('kg'));
   $('manage').addEventListener('click', toggleManager);
   $('clear').addEventListener('click', clearReading);
 
-  // Recalculate whenever the scale reading changes
+  // Scale readings affect the result immediately.
   ['glb', 'goz', 'gkg'].forEach((id) => $(id).addEventListener('input', updateResult));
 
-  // Remember and recalculate whenever the custom sling boxes change
+  // Custom sling edits are saved and included in the live calculation.
   ['slb', 'soz', 'skg'].forEach((id) => $(id).addEventListener('input', onCustomSlingInput));
 
   $('save').addEventListener('click', addSling);
 }
 
 
-/* ---------- 6. Start-up ---------- */
-loadState(state);                     // bring back saved slings and settings
-$('slb').value = state.custom.lb || '';   // refill the custom sling boxes
+/* Restore settings and input values before the first render. */
+loadState(state);
+$('slb').value = state.custom.lb || '';
 $('soz').value = state.custom.oz || '';
 $('skg').value = state.custom.kg || '';
 wireEvents();

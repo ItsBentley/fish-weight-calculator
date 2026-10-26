@@ -1,20 +1,21 @@
 /* ==========================================================
-   storage.js - saving and loading on this device
-   Uses the browser's localStorage. Everything is wrapped in
-   try/catch because storage can be blocked (e.g. private mode).
+   Save and load settings in browser localStorage.
+   Storage can be unavailable (for example, in private browsing),
+   so failures are reported once without stopping calculations.
    ========================================================== */
 
-const STORAGE_KEY = 'fishweights';   // where the app's data is kept
-const OLD_STORAGE_KEY = 'sling';     // key used by the very first version (still read once)
+const STORAGE_KEY = 'fishweights';
+const OLD_STORAGE_KEY = 'sling';
 let storageWarningShown = false;
 
+/* Avoid repeating storage warnings when every subsequent save also fails. */
 function warnStorage(message, error) {
   if (storageWarningShown) return;
   storageWarningShown = true;
   console.warn(message, error);
 }
 
-/* Saves the whole app state */
+/* Save the complete calculator state as JSON. */
 function saveState(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -23,7 +24,7 @@ function saveState(state) {
   }
 }
 
-/* Loads saved data into the given state object (changes it in place) */
+/* Restore saved settings into the initial state object. */
 function loadState(state) {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
@@ -31,11 +32,12 @@ function loadState(state) {
       state.unit = saved.unit === 'kg' ? 'kg' : 'lb';
       state.sel = saved.sel || 'custom';
       state.slings = Array.isArray(saved.slings) ? saved.slings : [];
-      state.custom = saved.custom || saved.c || state.custom;   // "c" = name used in earlier versions
+      // Older saved states used "c" for the custom sling fields.
+      state.custom = saved.custom || saved.c || state.custom;
       return;
     }
 
-    // No new-style data: fall back to the first version's custom sling weight
+    // Migrate the original single-sling format if no current state exists.
     const old = JSON.parse(localStorage.getItem(OLD_STORAGE_KEY) || 'null');
     if (old) {
       state.unit = old.unit === 'kg' ? 'kg' : 'lb';

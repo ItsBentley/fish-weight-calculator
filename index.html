@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- viewport-fit=cover lets the page use the full iPhone screen; the CSS keeps content clear of the notch -->
+  <!-- Extend the layout into phone safe areas; CSS adds padding for notches and home bars. -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Fish Weight Calculator</title>
 
-  <!-- Font (falls back to the system font if it can't load) -->
+  <!-- Bricolage Grotesque is optional; the system font is used if it cannot load. -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
 
-  <!-- All styling lives in this one file -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <main>
   <h1>Fish Weight Calculator</h1>
+
+  <!-- Fishing scale photo; fixed display height and CSS cover keep its proportions. -->
   <img
     class="scale-photo"
     src="assets/fish-scale.png"
@@ -24,16 +25,16 @@
     decoding="async"
   >
 
-  <!-- ===== Unit switch: pounds & ounces or kilograms ===== -->
+  <!-- Choose the units used by the calculator inputs and result. -->
   <div class="seg" role="group" aria-label="Units">
     <button id="u-lb" type="button" aria-pressed="true">lb &amp; oz</button>
     <button id="u-kg" type="button" aria-pressed="false">kg</button>
   </div>
 
-  <!-- ===== Step 1: reading from the scale (fish + sling together) ===== -->
+  <!-- Enter the combined fish and sling reading from the scale. -->
   <section class="panel">
     <h2>Weight on the scale (fish + sling)</h2>
-    <!-- Elements with class "lb" show in lb & oz mode, class "kg" in kg mode -->
+    <!-- JavaScript shows the fields matching the selected unit. -->
     <div class="row lb">
       <label>lb<input id="glb" type="number" inputmode="decimal" min="0" step="any" placeholder="0"></label>
       <label>oz<input id="goz" type="number" inputmode="decimal" min="0" step="any" placeholder="0"></label>
@@ -43,14 +44,14 @@
     </div>
   </section>
 
-  <!-- ===== Step 2: choose the sling to deduct ===== -->
+  <!-- Choose a saved sling or enter a custom sling weight to subtract. -->
   <section class="panel">
     <h2>Sling</h2>
 
-    <!-- Buttons: "Custom" plus one per saved sling (filled in by js/ui.js) -->
+    <!-- JavaScript fills this group with Custom and saved sling buttons. -->
     <div class="chips" id="chips" role="group" aria-label="Choose sling"></div>
 
-    <!-- Custom sling entry: shown only when "Custom" is selected -->
+    <!-- Custom weight fields are shown when Custom is selected. -->
     <div id="custom">
       <div class="row lb">
         <label>lb<input id="slb" type="number" inputmode="decimal" min="0" step="any" placeholder="0"></label>
@@ -61,12 +62,12 @@
       </div>
     </div>
 
-    <!-- Weight of the chosen saved sling: shown when a saved sling is selected -->
+    <!-- Displays the weight when a saved sling is selected. -->
     <p class="picked" id="picked" hidden></p>
 
     <button class="link" id="manage" type="button" aria-expanded="false">Edit saved slings</button>
 
-    <!-- Sling manager: list of saved slings and the "add a sling" form -->
+    <!-- Expandable list and form for managing saved sling weights. -->
     <div id="mgr" hidden>
       <div id="list"></div>
 
@@ -85,7 +86,7 @@
     </div>
   </section>
 
-  <!-- ===== Result: scale reading minus sling ===== -->
+  <!-- Live result: combined scale reading minus the selected sling weight. -->
   <div class="result" aria-live="polite">
     <small>Fish weight</small>
     <div class="big" id="out">&ndash;</div>
@@ -95,10 +96,10 @@
   <button class="clear" id="clear" type="button">Clear scale reading</button>
 </main>
 
-<!-- Scripts load in this order: each one uses the ones above it -->
-<script src="js/units.js"></script>    <!-- weight conversion and formatting -->
-<script src="js/storage.js"></script>  <!-- saving/loading on the device -->
-<script src="js/ui.js"></script>       <!-- drawing the screen -->
-<script src="js/app.js"></script>      <!-- app logic and button handlers -->
+<!-- Load shared helpers before the app logic that uses them. -->
+<script src="js/units.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
